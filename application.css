@@ -1,0 +1,167 @@
+.main-content {
+display:flex;
+flex-direction:column;
+
+align-items:center;
+background-color: #f0f0f0;
+border-radius:5px;
+width:210px;
+min-width:210px;
+}
+
+.banner {
+	display:flex;
+  margin-top:60px;
+  flex-direction:column;
+  align-items:center;
+}
+
+.tab-content {
+	display:flex;
+	justify-content:left;
+  margin-left:30px;
+}
+.connect-container {
+	display:flex;
+  flex-direction:column; 
+  align-items:center;
+}
+
+.container {
+  display: flex;
+}
+
+.crumbs {
+  display:flex;
+min-height:40px;
+flex-flow:wrap;
+margin-top:8px;
+
+}
+
+.form-oper {
+		display:flex;
+justify-content:left;
+margin-top:50px;
+margin-left:8px;
+background-color:#f8f8f8;
+border-radius:5px;
+}
+
+.input-group {
+	justify-content:space-between;
+}
+
+.input-group-prepend {
+		display:flex;
+justify-content:left;	
+}
+
+.form-loop {
+		display:flex;	
+    margin-right: 20px;
+    max-width:250px;
+    margin-top:auto;
+  }
+
+.form-test {
+		display:flex;	
+    margin-right: 20px;
+    margin-top:auto;
+    margin-bottom:10px;
+}  
+
+.input-area {
+		display:flex;		
+justify-content:left;	
+flex-wrap: wrap;
+background-color: #f8f8f8;
+margin-top:8px;
+margin-left:8px;
+border-radius:5px;
+}
+
+.input-gap {
+  display:flex;	
+
+  margin-right:40px;
+  margin-bottom:20px;
+}
+
+.input-item {
+  margin-right: 20px;
+  margin-bottom: 20px;
+}
+
+.main-area {
+			display:flex;		
+ 
+ margin-top:20px;	
+ margin-left:20px;
+border-radius:5px;
+background-color: #f8f8f8;
+}
+
+.tab-list {
+  margin-top:1px;
+  font-family:'Arial Bold', Gadget, sans-serif;
+}
+
+.btn-app {
+
+  margin-top:1px;
+  margin-bottom:6px;
+  margin-right:1px;
+  width:40px;
+}
+
+.form-check-label {
+  margin-top:auto;
+}
+
+.global {
+  display:flex;
+}
+
+.apps {
+ margin-top:40px;
+}
+
+.form-fw {
+	display:flex;
+
+  flex-direction:column;
+  align-items:left;
+}
+
+.fw-area {
+  display:flex;
+  margin-top:20px;
+
+}
+
+.flex-lines {
+	display:flex;
+  margin-top:60px;
+  flex-direction:column;
+  align-items:left;  
+  background-color:black;
+  color:#ede2e2d0;
+}
+
+.form-info {
+	display:flex;
+  align-items:left;
+}
+
+.col-info {
+	display:flex;
+  width:140px;
+  align-items:left;
+}
+
+.gesture-info {
+	display:flex;
+  width:150px;
+  align-items:left;
+}
