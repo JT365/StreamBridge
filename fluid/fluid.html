@@ -1,0 +1,54 @@
+<style>
+/* 1. 给挂载点设置一个硬性的最大高度，绝对不能超过 Canvas 区域 */
+#gui-mount-point {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    z-index: 10;       /* 降低层级，确保它不会飘在所有东西上面 */
+    width: 260px;
+    max-height: 180px; /* 强制高度！如果内容多了就内部滚动，绝不向下蔓延 */
+    overflow-y: auto !important; 
+    overflow-x: hidden;
+    background: rgba(0, 0, 0, 0.5); /* 给容器一个底色，方便调试位置 */
+}
+
+/* 2. 彻底粉碎 dat.GUI 的默认绝对定位 */
+#gui-mount-point .dg.main {
+    position: relative !important;
+    top: 0 !important;
+    right: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+}
+
+/* 3. 提升下方按钮区的层级，确保按钮永远在“最顶层”可以被点击 */
+.main-area {
+    position: relative;
+    z-index: 1000;      /* 远高于 GUI 的 z-index */
+    background: #fff;   /* 或者你的背景色，确保遮住可能溢出的 UI */
+}
+
+.form-oper {
+    display: flex;
+    gap: 10px;
+}
+</style>
+
+<div class="form-fw">
+  <div id="canvas-wrapper" class="form-fw text-center" style="position: relative; background: #000; min-height: 200px;">
+      <div id="gui-mount-point"></div>
+      </div>
+  <div class="main-area">
+    <div class="form-fw">
+      <div class="form-oper">
+        <div class="form-loop">
+          <button id="Start" type="button" class="btn btn-primary"><i class="bi-play"></i></button>            
+          <button id="Stop" type="button" class="btn btn-primary disabled"><i class="bi-stop"></i></button>             
+        </div>
+        <div class="form-loop">
+          <button id="Close" type="button" class="btn btn-primary">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
