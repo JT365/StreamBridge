@@ -121,7 +121,6 @@ initWebGL(gl, w, h) {
 
     this._initBuffers(); // 你的全屏 quad + UV
 
-
     // 源纹理：接收默认 framebuffer 的内容
     this.srcTexture = gl.createTexture();
     gl.bindTexture(gl.TEXTURE_2D, this.srcTexture);
@@ -181,6 +180,18 @@ initWebGL(gl, w, h) {
             this.onTouchEvent = ontouch;
             this.currentRotation = SANTA_CLAUS[this.bp.model];
 
+            if (this.currentRotation === 90 || this.currentRotation === 270) {
+            this.resX = this.bp.resY;
+            this.resY = this.bp.resX;
+            }
+
+            await this.bp.sendPLHead({
+            cmdType: 5,
+            fmtStr: `image/x-raw, format=BGR16, width=${this.resX}, height=${this.resY}, framerate=0/1`
+            });
+
+            this.gl = this.canvas.getContext('webgl2') || this.canvas.getContext('webgl');
+            this.initWebGL(this.gl, this.bp.resX, this.bp.resY);
             return this.canvas;
         } catch (e) {
             console.error("Dumpling: Hardware init failed:", e);
@@ -192,23 +203,9 @@ initWebGL(gl, w, h) {
         this.isActive = true;
         this.touchController = new AbortController();
 
-        this.gl = this.canvas.getContext('webgl2') || this.canvas.getContext('webgl');
-
-        this.initWebGL(this.gl, this.bp.resX, this.bp.resY);
-
-        if (this.currentRotation === 90 || this.currentRotation === 270) {
-            this.resX = this.bp.resY;
-            this.resY = this.bp.resX;
-        }
-
-        await this.bp.sendPLHead({
-            cmdType: 5,
-            fmtStr: `image/x-raw, format=BGR16, width=${this.resX}, height=${this.resY}, framerate=0/1`
-        });
-
         this._renderLoop();
 
-        if (this.bp.model === '5S' || this.bp.model === '8')
+        if ((this.bp.model === '5S' || this.bp.model === '8') && this.onTouchEvent)
             this._touchLoop(this.touchController.signal);
     }
 
@@ -362,5 +359,9 @@ async _touchLoop(signal) {
         }
 
         this.gl.deleteBuffer(this.vbo.posBuf)
+    }
+
+    async destroy() {
+          await this.bp.sendSLHead({'cmdType': 2});
     }
 }

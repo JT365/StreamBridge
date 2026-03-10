@@ -88,14 +88,15 @@
         $(workshop + " #Stop").click(stopProcess);
         $(workshop + " #Close").click(async () => {
             await stopProcess();
+            await dmp.destroy();
 
-          fluidArray = fluidArray.filter(item => item.tabIndex != tabIndex); 
-          closeTab(tabIndex);
+            fluidArray = fluidArray.filter(item => item.tabIndex != tabIndex); 
+            closeTab(tabIndex);
 
         });
     };
 
-/**
+  /**
    * Register the application button in the UI
    */
   const fluidReg = (bp) => {
