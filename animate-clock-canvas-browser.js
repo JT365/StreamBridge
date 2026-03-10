@@ -200,7 +200,8 @@ class AnimateClockCanvas {
     }
 
     stop() { 
-        this.isPlayConstantly = false; 
+        this.isPlayConstantly = false;
+        clearTimeout(this.timer); // 确保正在排队的下一帧被取消
     }
 
     start() { 
@@ -268,10 +269,11 @@ class AnimateClockCanvas {
             this.showAllInfo(contextClock)
         }
 
+        // 将 requestAnimationFrame 替换为 setTimeout
         if (this.isPlayConstantly) {
-            window.requestAnimationFrame(() => {
-                this.draw()
-            })
+            this.timer = setTimeout(() => {
+                this.draw();
+            }, 1000 / 30); // 约 30fps
         }
     }
 

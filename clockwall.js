@@ -65,7 +65,7 @@
         AppendOptions("#input-number", ["ALB", "LM"]);
         AppendOptions("#input-preset", ["0", "1"]);
         AppendOptions("#input-theme", ["white", "black"]);
-        AppendOptions("#input-timezone", ["Asia/Shanghai", "Asia/Tokyo", "Asia/Singapore", "Asia/Dubai", "America/New_York", "America/Chicago", "America/Los_Angeles", "Europe/London", "Europe/Paris", "Europe/Berlin", "Australia/Sydney"]);
+        AppendOptions("#input-timezone", ["Asia/Shanghai", "Asia/Tokyo", "Asia/Singapore", "Asia/Dubai", "America/New_York", "America/Chicago", "America/Denver", "America/Los_Angeles", "Europe/London", "Europe/Paris", "Europe/Berlin", "Australia/Sydney"]);
         AppendOptions("#input-rotation", ["none", "countclockwise", "clockwise", "rotate-180"]);
 
         const usbBufferCanvas = new OffscreenCanvas(bp.resX, bp.resY);
