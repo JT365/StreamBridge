@@ -190,8 +190,6 @@ initWebGL(gl, w, h) {
             fmtStr: `image/x-raw, format=BGR16, width=${this.resX}, height=${this.resY}, framerate=0/1`
             });
 
-            this.gl = this.canvas.getContext('webgl2') || this.canvas.getContext('webgl');
-            this.initWebGL(this.gl, this.bp.resX, this.bp.resY);
             return this.canvas;
         } catch (e) {
             console.error("Dumpling: Hardware init failed:", e);
@@ -201,10 +199,13 @@ initWebGL(gl, w, h) {
 
     async start() {
         this.isActive = true;
-        this.touchController = new AbortController();
+
+        this.gl = this.canvas.getContext('webgl2') || this.canvas.getContext('webgl');
+        this.initWebGL(this.gl, this.bp.resX, this.bp.resY);
 
         this._renderLoop();
 
+        this.touchController = new AbortController();
         if ((this.bp.model === '5S' || this.bp.model === '8') && this.onTouchEvent)
             this._touchLoop(this.touchController.signal);
     }
