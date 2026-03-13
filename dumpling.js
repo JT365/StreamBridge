@@ -61,6 +61,8 @@ class Dumpling {
         this.buffer = new Uint16Array(this.resX * this.resY);
         this.renderTimer = null;
         this.onTouchEvent = null; 
+        this.sending = false;
+        this.pendingFrame = null;
     }
 
     _createProgram(vs, fs) {
@@ -190,8 +192,6 @@ initWebGL(gl, w, h) {
             fmtStr: `image/x-raw, format=BGR16, width=${this.resX}, height=${this.resY}, framerate=0/1`
             });
 
-            this.gl = this.canvas.getContext('webgl2') || this.canvas.getContext('webgl');
-            this.initWebGL(this.gl, this.bp.resX, this.bp.resY);
             return this.canvas;
         } catch (e) {
             console.error("Dumpling: Hardware init failed:", e);
@@ -201,14 +201,40 @@ initWebGL(gl, w, h) {
 
     async start() {
         this.isActive = true;
-        this.touchController = new AbortController();
+
+        this.gl = this.canvas.getContext('webgl2') || this.canvas.getContext('webgl');
+        this.initWebGL(this.gl, this.bp.resX, this.bp.resY);
 
         this._renderLoop();
 
+        this.touchController = new AbortController();
         if ((this.bp.model === '5S' || this.bp.model === '8') && this.onTouchEvent)
             this._touchLoop(this.touchController.signal);
     }
 
+_scheduleSend(frame, w, h) {
+    this.pendingFrame = { frame, w, h };
+    this._trySend();
+}
+
+async _trySend() {
+    if (this.sending || !this.pendingFrame) return;
+
+    this.sending = true;
+
+    const { frame, w, h } = this.pendingFrame;
+    this.pendingFrame = null;
+
+    try {
+        await this.bp.sendMediaData(frame, w, h);
+    } finally {
+        this.sending = false;
+
+        if (this.pendingFrame) {
+            this._trySend();
+        }
+    }
+}
 
  _renderLoop() {
     if (!this.isActive) return;
@@ -221,7 +247,7 @@ initWebGL(gl, w, h) {
         gl.readPixels(0, 0, this.resX, this.resY, gl.RGBA, gl.UNSIGNED_BYTE, this.pixelBuffer);
 
         this._convertTo565Flip(this.pixelBuffer, this.resX, this.resY);
-        this.bp.sendMediaData(this.buffer.buffer, this.resX, this.resY);
+        this._scheduleSend(this.buffer.buffer, this.resX, this.resY);
 
         this.renderTimer = setTimeout(() => this._renderLoop(), 30);
         return;
