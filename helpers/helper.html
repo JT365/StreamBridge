@@ -1,0 +1,55 @@
+<style>
+#gui-mount-point {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 1100 !important; /* 确保在按钮区之上 */
+}
+
+/* dat.GUI 内部保持 relative */
+#gui-mount-point .dg.main {
+    position: relative;
+    width: 100%;
+}
+
+/* 提升下方按钮区的层级，确保按钮永远在“最顶层”可以被点击 */
+.main-area {
+    position: relative;
+    z-index: 1000;      /* 高于 GUI */
+    background: #fff;   /* 遮住可能溢出的 UI */
+}
+</style>
+
+<div class="form-fw">
+  <div id="canvas-wrapper" class="form-fw text-center" 
+       style="position: relative; background: #000; min-height: 200px;">
+      
+      <!-- dat.GUI 挂载点 -->
+      <div id="gui-mount-point"></div>
+
+  </div>
+
+  <div class="main-area">
+    <div class="form-fw">
+      <div class="form-oper">
+
+        <div class="form-loop">
+          <button id="Start" type="button" class="btn btn-primary">
+            <i class="bi-play"></i>
+          </button>
+
+          <button id="Stop" type="button" class="btn btn-primary disabled">
+            <i class="bi-stop"></i>
+          </button>
+        </div>
+
+        <div class="form-loop">
+          <button id="Close" type="button" class="btn btn-primary">
+            Close
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
