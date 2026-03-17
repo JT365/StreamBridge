@@ -71,6 +71,40 @@ import * as THREE from '../third_part/three/three.module.js';
             }
         };
 
+        /**
+        * 将 RGBA8888 转换为 RGB565 并进行垂直翻转 (WebGL 像素对齐修正)
+        * @param {Uint8Array} rgbaData - gl.readPixels 获取的原始像素数据
+        * @param {Uint16Array} outBuffer - 预分配的 RGB565 目标缓冲区
+        * @param {number} width - 图像宽度
+        * @param {number} height - 图像高度
+        */
+        const encodeRGB565Flip = (rgbaData, outBuffer, width, height) => {
+            // 使用 Uint32Array 视图，一次性处理 4 个字节（一个像素），比操作 Uint8Array 快得多
+            const data32 = new Uint32Array(rgbaData.buffer);
+
+            for (let y = 0; y < height; y++) {
+                // WebGL 数据是从底向上的，所以源索引（sourceRow）要从最后一行开始取
+                // 目标索引（destRow）从第一行开始存
+                const sourceRowOffset = (height - 1 - y) * width;
+                const destRowOffset = y * width;
+
+                for (let x = 0; x < width; x++) {
+                    const pixel = data32[sourceRowOffset + x];
+
+                    // 提取通道 (基于 Little-endian 字节序: R 是低 8 位)
+                    // R: 取低 8 位 -> 右移 3 位 剩 5 位
+                    // G: 取中 8 位 -> 右移 2 位 剩 6 位
+                    // B: 取高 8 位 -> 右移 3 位 剩 5 位
+                    const r = (pixel & 0xFF) >> 3;
+                    const g = (pixel >> 8 & 0xFF) >> 2;
+                    const b = (pixel >> 16 & 0xFF) >> 3;
+
+                    // 组合为 RGB565: [RRRRRGGGGGGBBBBB]
+                    outBuffer[destRowOffset + x] = (r << 11) | (g << 5) | b;
+                }
+            }
+        };
+
         const initThree = () => {
             scene = new THREE.Scene();
             camera = new THREE.PerspectiveCamera(50, bp.resX / bp.resY, 1, 10);
@@ -121,7 +155,7 @@ import * as THREE from '../third_part/three/three.module.js';
             try {
                 const gl = renderer.getContext();
                 gl.readPixels(0, 0, bp.resX, bp.resY, gl.RGBA, gl.UNSIGNED_BYTE, pixelBuffer);
-                encodeRGB565(pixelBuffer, rgb565Buffer);
+                encodeRGB565Flip(pixelBuffer, rgb565Buffer, bp.resX, bp.resY);;
                 await bp.sendMediaData(rgb565Buffer.buffer);
             } catch (err) { } finally { isSending = false; }
         };
@@ -138,7 +172,6 @@ import * as THREE from '../third_part/three/three.module.js';
             $(this).addClass("disabled");
             $(workshop).find("#Stop").removeClass("disabled");
 
-            await bp.sendSLHead({ 'cmdType': 2 });
             await bp.sendPLHead({ 'cmdType': 5, 'fmtStr': `video/x-raw, format=RGB16, width=${bp.resX}, height=${bp.resY}, framerate=0/1` });
 
             abort = false; isActive = true;
