@@ -197,9 +197,7 @@ window.THREE = THREE;
             if ($(this).hasClass("disabled")) return;
             $(this).addClass("disabled");
             $(workshop).find("#Stop").removeClass("disabled");
-            
-            await bp.sendPLHead({ 'cmdType': 5, 'fmtStr': `video/x-raw, format=RGB16, width=${bp.resX}, height=${bp.resY}, framerate=0/1` });
-            
+                       
             abort = false; isActive = true;
             if (!renderer) await initThree(); // 仅在没有渲染器时初始化
             
@@ -228,12 +226,13 @@ window.THREE = THREE;
                 closeTab(tabIndex);
             } else {
                 stopLoop(); // 仅停止循环
-                await bp.sendSLHead({ 'cmdType': 2 });
                 $(workshop).find("#Start").removeClass("disabled");
                 $(workshop).find("#Stop").addClass("disabled");
             }
         });
 
+        await bp.sendPLHead({ 'cmdType': 5, 'fmtStr': `video/x-raw, format=RGB16, width=${bp.resX}, height=${bp.resY}, framerate=0/1` });
+ 
         return { tabIndex };
     };
 
