@@ -190,8 +190,8 @@ import * as THREE from '../third_part/three/three.module.js';
         $(workshop).find("#Stop, #Close").on('click', async function() {
             const isClose = this.id === "Close";
             await cleanup();
-            await bp.sendSLHead({ 'cmdType': 2 });
             if (isClose) {
+                await bp.sendSLHead({ 'cmdType': 2 });
                 instanceArray = instanceArray.filter(item => item.tabIndex !== tabIndex);
                 closeTab(tabIndex);
             } else {
