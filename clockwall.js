@@ -185,11 +185,6 @@
 
           }
 
-          await bp.sendPLHead({
-            'cmdType': 5, 
-            'fmtStr': `video/x-raw, format=RGB16, width=${bp.resX}, height=${bp.resY}, framerate=0/1`
-          });
-
           updateCanvas();
         });   	        
 
@@ -219,7 +214,6 @@
           $(this).tooltip('hide');
 
           await cleanup();
-          await bp.sendSLHead({'cmdType': 2});
 
           $(workshop + " #Start").removeClass("disabled");
           $(workshop + " #Stop").addClass("disabled");
@@ -235,6 +229,11 @@
           clockArray = clockArray.filter(item => item.tabIndex != tabIndex); 
           closeTab(tabIndex);
         });
+
+        await bp.sendPLHead({
+            'cmdType': 5, 
+            'fmtStr': `video/x-raw, format=RGB16, width=${bp.resX}, height=${bp.resY}, framerate=0/1`
+          });
 
         // Return the control object for the global array
         return {
