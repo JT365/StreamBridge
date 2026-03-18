@@ -172,8 +172,6 @@ import * as THREE from '../third_part/three/three.module.js';
             $(this).addClass("disabled");
             $(workshop).find("#Stop").removeClass("disabled");
 
-            await bp.sendPLHead({ 'cmdType': 5, 'fmtStr': `video/x-raw, format=RGB16, width=${bp.resX}, height=${bp.resY}, framerate=0/1` });
-
             abort = false; isActive = true;
             initThree();
 
@@ -201,6 +199,8 @@ import * as THREE from '../third_part/three/three.module.js';
                 $(workshop).find("#Stop").addClass("disabled");
             }
         });
+
+        await bp.sendPLHead({ 'cmdType': 5, 'fmtStr': `video/x-raw, format=RGB16, width=${bp.resX}, height=${bp.resY}, framerate=0/1` });
 
         return { tabIndex };
     };
