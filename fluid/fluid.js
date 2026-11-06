@@ -18,9 +18,10 @@
             const p = window.pointers[0];
             if (!p) return;
 
-            // 1. 坐标处理：翻转 Y 轴 (Top-0 变 Bottom-0)
-            const pixelX = x;
-            const pixelY = y; 
+            // The touch panel reports coordinates from the bottom-right origin,
+            // so flip both axes before sending to the fluid engine.
+            const pixelX = bp.resX - 1 - x;
+            const pixelY = bp.resY - 1 - y;
 
             // 2. 状态逻辑：Down -> Move -> Up
             if (isDown) {
